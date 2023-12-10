@@ -2,7 +2,25 @@ import "./App.css";
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from "react";
 import { pdfGenerator } from "./esikidz-utilities";
-import childPhoto from "./esikidz-utilities/lib/pdf-generator/assets/forPDFDefault.png";
+
+// convert image to base64
+// const imageToBase64 = async (url) => {
+//   try {
+//     // convert img url to base64
+//     const urlResponse = await fetch(url);
+//     const imgBlob = await urlResponse.blob();
+
+//     const reader = new FileReader();
+//     reader.readAsDataURL(imgBlob);
+//     reader.onloadend = () => {
+//       const base64String = reader.result;
+//       return base64String;
+//     };
+//   } catch (error) {
+//     // if there is an error on convert img url to base64 just return an empty string
+//     return "";
+//   }
+// };
 
 function App() {
   // Create state for the image file
@@ -120,7 +138,6 @@ function App() {
     const indigenousPerson = indigenousPersonRef.current.value;
     const walkHomePermission = walkHomePermissionRef.current.value;
     const childEthnicity = childEthnicityRef.current.value;
-    const guardianPhoto = guardianPhotoRef.current.value;
     const primaryGuardianName = primaryGuardianNameRef.current.value;
     const primaryGuardianRelationship =
       primaryGuardianRelationshipRef.current.value;
@@ -165,7 +182,7 @@ function App() {
     // Generate PDF
     pdfGenerator.createChildDocumentPdf(
       pdfGenerator.getRegistrationData({
-        avatar: childPhoto ? URL.createObjectURL(childPhoto) : childPhoto,
+        avatar: childPhoto ? URL.createObjectURL(childPhoto) : null,
         careCard,
         medicalCondition,
         allergies,
@@ -190,7 +207,9 @@ function App() {
         indigenousPerson,
         walkHomePermission,
         childEthnicity,
-        guardianPhoto,
+        guardianPhoto: guardianPhoto
+          ? URL.createObjectURL(guardianPhoto)
+          : null,
         primaryGuardianName,
         primaryGuardianRelationship,
         primaryGuardianCellPhone,
@@ -399,20 +418,15 @@ function App() {
           {/* Guardian Photo Upload */}
           <label>
             Upload guardian photo for authorized pickup:
-            <input
-              type="file"
-              ref={guardianPhotoRef}
-              accept="image/*"
-              onChange={handleGuardianPhotoChange}
-            />
+            <input type="file" onChange={handleGuardianPhotoChange} />
+            {guardianPhoto && (
+              <img
+                src={URL.createObjectURL(guardianPhoto)}
+                width={200}
+                alt="Child Photo"
+              />
+            )}
           </label>
-          {guardianPhoto && (
-            <img
-              src={URL.createObjectURL(guardianPhoto)}
-              width={200}
-              alt="Child Photo"
-            />
-          )}
 
           {/* Primary Guardian */}
           <h2>Primary Guardian</h2>
@@ -577,8 +591,8 @@ function App() {
             Considered a newcomer to Canada (immigrated within the last 5
             years)?
             <select ref={newcomerStatusRef}>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </label>
 
