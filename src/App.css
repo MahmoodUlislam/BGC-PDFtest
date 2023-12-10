@@ -34,7 +34,9 @@ form {
   justify-content: center;
   padding: 1rem;
 }
-
+.guardianInfo {
+  display: none; /* Temporary hide before photo implementation in pdf */
+}
 .pickupSet {
   display: flex;
   flex-direction: row;

@@ -4,23 +4,23 @@ import React, { useState, useRef, useEffect } from "react";
 import { pdfGenerator } from "./esikidz-utilities";
 
 // convert image to base64
-// const imageToBase64 = async (url) => {
-//   try {
-//     // convert img url to base64
-//     const urlResponse = await fetch(url);
-//     const imgBlob = await urlResponse.blob();
+const imageToBase64 = async (url) => {
+  try {
+    // convert img url to base64
+    const urlResponse = await fetch(url);
+    const imgBlob = await urlResponse.blob();
 
-//     const reader = new FileReader();
-//     reader.readAsDataURL(imgBlob);
-//     reader.onloadend = () => {
-//       const base64String = reader.result;
-//       return base64String;
-//     };
-//   } catch (error) {
-//     // if there is an error on convert img url to base64 just return an empty string
-//     return "";
-//   }
-// };
+    const reader = new FileReader();
+    reader.readAsDataURL(imgBlob);
+    reader.onloadend = () => {
+      const base64String = reader.result;
+      return base64String;
+    };
+  } catch (error) {
+    // if there is an error on convert img url to base64 just return an empty string
+    return "";
+  }
+};
 
 function App() {
   // Create state for the image file
@@ -52,7 +52,6 @@ function App() {
   const indigenousPersonRef = useRef(null);
   const walkHomePermissionRef = useRef(null);
   const childEthnicityRef = useRef(null);
-  const guardianPhotoRef = useRef(null);
   const primaryGuardianNameRef = useRef(null);
   const primaryGuardianRelationshipRef = useRef(null);
   const primaryGuardianCellPhoneRef = useRef(null);
@@ -208,7 +207,7 @@ function App() {
         walkHomePermission,
         childEthnicity,
         guardianPhoto: guardianPhoto
-          ? URL.createObjectURL(guardianPhoto)
+          ? imageToBase64(URL.createObjectURL(guardianPhoto))
           : null,
         primaryGuardianName,
         primaryGuardianRelationship,
@@ -255,14 +254,14 @@ function App() {
           <label>
             Upload Child Avatar Photo:
             <input type="file" onChange={handleChildPhotoChange} />
-            {childPhoto && (
-              <img
-                src={URL.createObjectURL(childPhoto)}
-                width={200}
-                alt="Child Photo"
-              />
-            )}
           </label>
+          {childPhoto && (
+            <img
+              src={URL.createObjectURL(childPhoto)}
+              width={200}
+              alt="Child Photo"
+            />
+          )}
 
           {/* Medical Info */}
           <h2>Medical Information</h2>
@@ -290,22 +289,22 @@ function App() {
           <h2>Child Information</h2>
           <label>
             First Name:
-            <input type="text" ref={firstNameRef} />
+            <input type="text" ref={firstNameRef} required />
           </label>
 
           <label>
             Last Name:
-            <input type="text" ref={lastNameRef} />
+            <input type="text" ref={lastNameRef} required />
           </label>
 
           <label>
             Birthday:
-            <input type="date" ref={birthdayRef} />
+            <input type="date" ref={birthdayRef} required />
           </label>
 
           <label>
             Gender:
-            <select ref={genderRef}>
+            <select ref={genderRef} required>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>
@@ -415,10 +414,12 @@ function App() {
           </label>
 
           <h1>Guardian Information</h1>
-          {/* Guardian Photo Upload */}
-          <label>
-            Upload guardian photo for authorized pickup:
-            <input type="file" onChange={handleGuardianPhotoChange} />
+          <div className="guardianInfo">
+            {/* Guardian Photo Upload */}
+            <label>
+              Upload guardian photo for authorized pickup:
+              <input type="file" onChange={handleGuardianPhotoChange} />
+            </label>
             {guardianPhoto && (
               <img
                 src={URL.createObjectURL(guardianPhoto)}
@@ -426,7 +427,7 @@ function App() {
                 alt="Child Photo"
               />
             )}
-          </label>
+          </div>
 
           {/* Primary Guardian */}
           <h2>Primary Guardian</h2>
